@@ -74,7 +74,28 @@ rabbitmq:
   queue:
     payment: ${RABBITMQ_QUEUE_PAYMENT}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, info, metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
 integration:
   stripe:
     url: https://api.stripe.com
     secret-key: ${STRIPE_SECRET_KEY}
+
+springdoc:
+  swagger-ui:
+    path: /docs
