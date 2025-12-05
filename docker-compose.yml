@@ -3,6 +3,8 @@ services:
     networks:
       - app_payment_network
       - shared_ecommerce_network
+    container_name:
+      payment-app
     build:
       context: .
     image: payment-service:latest
