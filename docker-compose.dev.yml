@@ -1,0 +1,46 @@
+services:
+  app:
+    networks:
+      - app_payment_network
+      - shared_ecommerce_network
+    container_name:
+      payment-app
+    build:
+      context: .
+    image: payment-service:latest
+    ports:
+      - "8082:8082"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    container_name: payment_db
+    networks:
+      - app_payment_network
+      - shared_ecommerce_network
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "5433:5432"
+    volumes:
+      - type: tmpfs
+        target: /dev/shm
+        tmpfs:
+          size: 134217728
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app_payment_network:
+    driver: bridge
+  shared_ecommerce_network:
+    external: true
