@@ -7,7 +7,7 @@ spring:
     time-zone: UTC
 
   datasource:
-    url: jdbc:postgresql://db:5432/${POSTGRES_DB}
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=require&prepareThreshold=0
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -20,6 +20,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST:localhost}
